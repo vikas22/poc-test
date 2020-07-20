@@ -1,0 +1,14 @@
+## Razorpay Card Payments Service Config
+title = "DB poc"
+[database]
+    dialect               = "postgres"
+    protocol              = "tcp"
+    url                   = "test"
+    username              = "postgres"
+    password              = "test"
+    sslMode               = "require"
+    name                  = "poc"
+    maxOpenConnections    = 500
+    maxIdleConnections    = 500
+    connectionMaxLifetime = 10
+    bulkUpdateLimit       = 1
