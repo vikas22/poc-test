@@ -5,6 +5,8 @@ import (
   "db-poc/internal/poc"
   "flag"
   "fmt"
+  "github.com/prometheus/client_golang/prometheus/promhttp"
+  "net/http"
 )
 
 var op string
@@ -18,6 +20,11 @@ const (
   DefaultRecords = 100000
   DefaultConcurrency = 100
 )
+
+func init() {
+  http.Handle("/metrics", promhttp.Handler())
+  go http.ListenAndServe(":2193", nil)
+}
 
 func main() {
 	bootstrap.Init()
