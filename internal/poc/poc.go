@@ -26,10 +26,12 @@ func RunPoc(records, concurrency int64 )  {
  maxPaymentPerMerchant := records / concurrency
 
  log.Printf("\n=== Put() %d cards with %d concurrency", records, concurrency)
+  cardNumbers := bootstrap.GetCardNumbers()
+  merchantIds := bootstrap.GetMerchantIds()
 
  for thread := 0; thread < int(concurrency); thread++ {
    wg.Add(1)
-   go writePaymentsHot(&wg, thread, maxPaymentPerMerchant, bootstrap.GetCardNumbers(), bootstrap.GetMerchantIds())
+   go writePaymentsHot(&wg, thread, maxPaymentPerMerchant, cardNumbers, merchantIds)
  }
  wg.Wait()
 }
