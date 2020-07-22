@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+  _ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
 	"time"
 )
@@ -142,6 +143,10 @@ func (db *Db) Ping() error {
 	if _, err = db.instance.DB().Exec("SELECT 1"); err != nil {
 		return err
 	}
+
+  if _, err = db.instance.DB().Exec("SET AUTOCOMMIT off"); err != nil {
+    return err
+  }
 
 	return err
 }
