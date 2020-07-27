@@ -29,31 +29,25 @@ func RunPoc(records, concurrency int64) {
 	merchantIds := bootstrap.GetMerchantIds()
 
 	for thread := 0; thread < int(concurrency); thread++ {
-		wg.Add(1)
 		go writePaymentsHot(&wg, thread, maxPaymentPerMerchant, cardNumbers, merchantIds)
 	}
 	wg.Wait()
 }
 
 func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds, merchantIds []string) {
-	defer wg.Done()
-
-	var group sync.WaitGroup
-
 	for pId := 1; pId <= int(maxPayment); pId++ {
-		group.Add(1)
-		go test(&group, cardIds, merchantIds)
+    wg.Add(1)
+		go test(wg, cardIds, merchantIds)
 	}
-	group.Wait()
 }
 
-func test(group *sync.WaitGroup, cardIds, merchantIds []string) {
+func test(wg *sync.WaitGroup, cardIds, merchantIds []string) {
+  defer wg.Done()
 	pCore, _ := paymentPkg.GetCore()
 	cCore, _ := cardsPkg.GetCore()
 	cRepo := cardsPkg.GetRepo()
 	merchantIdSize := len(merchantIds) - 1
 	cardSize := len(cardIds) - 1
-	defer group.Done()
 	op := "poc"
 
 	now := time.Now()
@@ -103,5 +97,4 @@ func test(group *sync.WaitGroup, cardIds, merchantIds []string) {
 		prom_metrics.IncOperation(op, true)
 		prom_metrics.DbRequestDuration(op, true, now)
 	}
-	group.Done()
 }
