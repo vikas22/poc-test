@@ -43,8 +43,8 @@ func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds,
 	cardSize := len(cardIds) - 1
   var group sync.WaitGroup
 	merchantIdSize := len(merchantIds) - 1
+  group.Add(int(maxPayment))
 	for pId := 1; pId <= int(maxPayment); pId++ {
-    group.Add(1)
 		go func(group sync.WaitGroup) {
 		  defer group.Done()
       op := "poc"
