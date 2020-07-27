@@ -97,10 +97,11 @@ func Up20200720125828(tx *sql.Tx) error {
     reference16 varchar(255)  DEFAULT NULL,
     reference17 text  DEFAULT NULL,
     created_at int NOT NULL,
-    partition_at int NOT NULL,
+    partition_at DATE NOT NULL,
     updated_at int,
     CONSTRAINT payments_pkey PRIMARY KEY (id, partition_at))
-    PARTITION BY RANGE(partition_at);`)
+    PARTITION BY RANGE(partition_at)
+    WITH (OIDS=FALSE);`)
 
 
 	return err
