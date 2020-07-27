@@ -28,7 +28,7 @@ func init() {
 }
 
 func main() {
-	//bootstrap.Init()
+	bootstrap.Init()
 	fmt.Println(bootstrap.Db)
 	fmt.Println(bootstrap.Config)
 	fmt.Println("Db Poc")
