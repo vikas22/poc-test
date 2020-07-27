@@ -58,7 +58,7 @@ func startWeb(cardNumbers, merchantIds []string) {
   router := gin.New()
   rootGroup := router.Group("/")
   rootGroup.GET("poc", func(context *gin.Context) {
-    //poc.Test2(cardNumbers, merchantIds)
+    poc.Test2(cardNumbers, merchantIds)
     context.JSON(http.StatusOK, gin.H{})
   })
 
