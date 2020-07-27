@@ -2,7 +2,7 @@ package payment
 
 // Authentication - Store all the Authentication data for card
 type Payment struct {
-	Id                    string `json:"id"`
+	Id                    int64 `json:"id"`
   PaymentId            string `json:"payment_id"`
 	MerchantId            string
 	Amount                int64

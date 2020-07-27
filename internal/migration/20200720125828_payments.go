@@ -11,7 +11,7 @@ func init() {
 
 func Up20200720125828(tx *sql.Tx) error {
 	_, err := tx.Exec(`CREATE TABLE payments (
-    id bigserial not null,
+    id SERIAL,
     payment_id char(14)  NOT NULL,
     merchant_id char(14)  NOT NULL,
     amount int NOT NULL,
