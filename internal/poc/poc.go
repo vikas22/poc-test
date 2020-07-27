@@ -41,56 +41,62 @@ func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds,
 	cCore, _ := cardsPkg.GetCore()
 	cRepo := cardsPkg.GetRepo()
 	cardSize := len(cardIds) - 1
-
+  var wg1 sync.WaitGroup
 	merchantIdSize := len(merchantIds) - 1
 	for pId := 1; pId <= int(maxPayment); pId++ {
-		op := "poc"
-		now := time.Now()
-		cardNumber := cardIds[utils.RandomInt(cardSize)]
-		merchantId := merchantIds[utils.RandomInt(merchantIdSize)]
-		vaultToken := base64.StdEncoding.EncodeToString([]byte(cardNumber))
-		cardFetchTime := time.Now()
-		card := &cardsPkg.Card{}
-		cRepo.FindExistingCard(vaultToken, merchantId, card)
-		fmt.Println("cardID", card.ID)
-		if card.ID == "" {
-      prom_metrics.IncOperation(op+"_card_fetch_not_found", true)
-			prom_metrics.DbRequestDuration(op+"_card_fetch_not_found", true, cardFetchTime)
-		} else {
-      prom_metrics.IncOperation(op+"_card_fetch_found", true)
-			prom_metrics.DbRequestDuration(op+"_card_fetch_found", true, cardFetchTime)
-		}
+    wg1.Add(1)
+		go func(group sync.WaitGroup) {
+		  defer group.Done()
+      op := "poc"
 
-		cardId := ""
+      now := time.Now()
+      cardNumber := cardIds[utils.RandomInt(cardSize)]
+      merchantId := merchantIds[utils.RandomInt(merchantIdSize)]
+      vaultToken := base64.StdEncoding.EncodeToString([]byte(cardNumber))
+      cardFetchTime := time.Now()
+      card := &cardsPkg.Card{}
+      cRepo.FindExistingCard(vaultToken, merchantId, card)
+      fmt.Println("cardID", card.ID)
+      if card.ID == "" {
+        prom_metrics.IncOperation(op+"_card_fetch_not_found", true)
+        prom_metrics.DbRequestDuration(op+"_card_fetch_not_found", true, cardFetchTime)
+      } else {
+        prom_metrics.IncOperation(op+"_card_fetch_found", true)
+        prom_metrics.DbRequestDuration(op+"_card_fetch_found", true, cardFetchTime)
+      }
 
-		if card.ID == "" {
-			cardWriteTime := time.Now()
-			newCard := cardsPkg.Card{VaultToken: vaultToken, MerchantId: merchantId, Id: utils.NewID()}
-			cCore.CreateCard(newCard)
-			cardId = newCard.ID
-      prom_metrics.IncOperation(op+"_card_write", true)
-			prom_metrics.DbRequestDuration(op+"_card_write", false, cardWriteTime)
-			op += "_with_new_card"
-		} else {
-			cardId = card.ID
-			op += "_with_existing_card"
-		}
+      cardId := ""
 
-		paymentOp := "payment_write"
-		paymentWriteTime := time.Now()
-		payment := paymentPkg.Payment{CardId: cardId, PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
-		err := pCore.CreatePayment(payment)
+      if card.ID == "" {
+        cardWriteTime := time.Now()
+        newCard := cardsPkg.Card{VaultToken: vaultToken, MerchantId: merchantId, Id: utils.NewID()}
+        cCore.CreateCard(newCard)
+        cardId = newCard.ID
+        prom_metrics.IncOperation(op+"_card_write", true)
+        prom_metrics.DbRequestDuration(op+"_card_write", false, cardWriteTime)
+        op += "_with_new_card"
+      } else {
+        cardId = card.ID
+        op += "_with_existing_card"
+      }
 
-    prom_metrics.IncOperation(paymentOp, true)
-		prom_metrics.DbRequestDuration(paymentOp, true, paymentWriteTime)
-		fmt.Println(op)
-		if err != nil {
-			log.Println(err)
-			prom_metrics.IncOperation(op, false)
-			prom_metrics.DbRequestDuration(op, false, now)
-		} else {
-			prom_metrics.IncOperation(op, true)
-			prom_metrics.DbRequestDuration(op, true, now)
-		}
+      paymentOp := "payment_write"
+      paymentWriteTime := time.Now()
+      payment := paymentPkg.Payment{CardId: cardId, PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
+      err := pCore.CreatePayment(payment)
+
+      prom_metrics.IncOperation(paymentOp, true)
+      prom_metrics.DbRequestDuration(paymentOp, true, paymentWriteTime)
+      fmt.Println(op)
+      if err != nil {
+        log.Println(err)
+        prom_metrics.IncOperation(op, false)
+        prom_metrics.DbRequestDuration(op, false, now)
+      } else {
+        prom_metrics.IncOperation(op, true)
+        prom_metrics.DbRequestDuration(op, true, now)
+      }
+    }(wg1)
 	}
+	wg1.Wait()
 }
