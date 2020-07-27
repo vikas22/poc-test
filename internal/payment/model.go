@@ -45,7 +45,7 @@ type Payment struct {
 	LateAuthorized        bool
 	ConvertCurrency       bool
 	CreatedAt             int64
-  PartitionAt             int64
+  PartitionAt             string
 }
 
 // TableName - Get the authentication table name (impl gorm tabler interface)
