@@ -54,8 +54,10 @@ func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds,
 		cRepo.FindExistingCard(vaultToken, merchantId, card)
 		fmt.Println("cardID", card.ID)
 		if card.ID == "" {
+      prom_metrics.IncOperation(op+"_card_fetch_not_found", true)
 			prom_metrics.DbRequestDuration(op+"_card_fetch_not_found", true, cardFetchTime)
 		} else {
+      prom_metrics.IncOperation(op+"_card_fetch_found", true)
 			prom_metrics.DbRequestDuration(op+"_card_fetch_found", true, cardFetchTime)
 		}
 
@@ -66,6 +68,7 @@ func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds,
 			newCard := cardsPkg.Card{VaultToken: vaultToken, MerchantId: merchantId, Id: utils.NewID()}
 			cCore.CreateCard(newCard)
 			cardId = newCard.ID
+      prom_metrics.IncOperation(op+"_card_write", true)
 			prom_metrics.DbRequestDuration(op+"_card_write", false, cardWriteTime)
 			op += "_with_new_card"
 		} else {
@@ -78,6 +81,7 @@ func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds,
 		payment := paymentPkg.Payment{CardId: cardId, PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
 		err := pCore.CreatePayment(payment)
 
+    prom_metrics.IncOperation(paymentOp, true)
 		prom_metrics.DbRequestDuration(paymentOp, true, paymentWriteTime)
 		fmt.Println(op)
 		if err != nil {

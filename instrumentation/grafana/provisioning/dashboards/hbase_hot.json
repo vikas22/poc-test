@@ -198,7 +198,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(bench_db_operation{operation=\"poc_payment_with_new_card\"}[1m]))",
+          "expr": "sum(increase(bench_db_operation{operation=\"poc_with_new_card\"}[1m]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -312,7 +312,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(bench_db_operation{operation=\"poc_payment_with_existing_card\"}[1m]))",
+          "expr": "sum(increase(bench_db_operation{operation=\"poc_with_existing_card\"}[1m]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -408,7 +408,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_with_new_card\"}[1m])) by (le, operation))",
+          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_with_new_card\"}[1m])) by (le, operation))",
           "interval": "",
           "legendFormat": "p99-payments write new card",
           "refId": "A"
@@ -509,7 +509,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_with_existing_card\"}[1m])) by (le, operation))",
+          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_with_existing_card\"}[1m])) by (le, operation))",
           "interval": "",
           "legendFormat": "p99-payments write existing card",
           "refId": "A"
@@ -610,7 +610,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_write\"}[1m])) by (le, operation))",
+          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"payment_write\"}[1m])) by (le, operation))",
           "interval": "",
           "legendFormat": "p99-payment write",
           "refId": "A"
@@ -684,7 +684,7 @@
         "y": 31
       },
       "hiddenSeries": false,
-      "id": 10,
+      "id": 14,
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -711,15 +711,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"card_index_write\"}[1m])) by (le, operation))",
+          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_card_write\"}[1m])) by (le, operation))",
           "interval": "",
-          "legendFormat": "p99-Card index write",
+          "legendFormat": "p99-Card write",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.9999, sum(rate(bench_db_duration_histogram_bucket{operation=\"card_index_write\"}[1m])) by (le, operation))",
+          "expr": "histogram_quantile(0.9999, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_card_write\"}[1m])) by (le, operation))",
           "interval": "",
-          "legendFormat": "p99-Card index write",
+          "legendFormat": "p9999-Card write",
           "refId": "B"
         }
       ],
@@ -727,7 +727,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "DB - Card Index write",
+      "title": "DB - Card write",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -812,7 +812,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_card_fetch_found\"}[1m])) by (le, operation))",
+          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_card_fetch_found\"}[1m])) by (le, operation))",
           "interval": "",
           "legendFormat": "p99-Card index write",
           "refId": "A"
@@ -829,107 +829,6 @@
       "timeRegions": [],
       "timeShift": null,
       "title": "DB - Card Index fetch hit",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "ms",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 39
-      },
-      "hiddenSeries": false,
-      "id": 14,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": false,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_card_write\"}[1m])) by (le, operation))",
-          "interval": "",
-          "legendFormat": "p99-Card write",
-          "refId": "A"
-        },
-        {
-          "expr": "histogram_quantile(0.9999, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_card_write\"}[1m])) by (le, operation))",
-          "interval": "",
-          "legendFormat": "p9999-Card write",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "DB - Card write",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1014,7 +913,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_payment_card_fetch_not_found\"}[1m])) by (le, operation))",
+          "expr": "histogram_quantile(0.99, sum(rate(bench_db_duration_histogram_bucket{operation=\"poc_card_fetch_not_found\"}[1m])) by (le, operation))",
           "interval": "",
           "legendFormat": "p99-Card index write",
           "refId": "A"
@@ -1076,7 +975,7 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -1095,5 +994,5 @@
   "timezone": "",
   "title": "Hbase Hot storage",
   "uid": "I1pkM3mMz",
-  "version": 28
+  "version": 47
 }

@@ -1,10 +1,9 @@
 package utils
 
 import (
-  "fmt"
   "github.com/hashicorp/go-uuid"
   "math/rand"
-	"time"
+  "time"
 )
 
 const (
@@ -33,7 +32,6 @@ func GetPartitionAt() time.Time {
   currentTime := time.Now()
   //rand.Seed(time.Now().Unix())
   random := int64(rand.Intn(100000) % 3)
-  fmt.Println(random)
   switch random {
   case 1:
     currentTime = time.Now().AddDate(0, 1, 0)
