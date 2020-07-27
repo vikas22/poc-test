@@ -103,4 +103,5 @@ func test(group sync.WaitGroup, cardIds, merchantIds []string) {
     prom_metrics.IncOperation(op, true)
     prom_metrics.DbRequestDuration(op, true, now)
   }
+  group.Done()
 }
