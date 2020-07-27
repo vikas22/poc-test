@@ -28,17 +28,20 @@ func NewID() string {
 	return id
 }
 
-func GetPartitionAt() int64 {
-
+func GetPartitionAt() string {
+  currentTime := time.Now()
+  rand.Seed(time.Now().Unix())
   random := int64(rand.Intn(2))
   switch random {
   case 1:
-    return  time.Now().AddDate(0, 1, 0).Unix()
+    currentTime = time.Now().AddDate(0, 1, 0)
   case 2:
-    return time.Now().AddDate(0, 2, 0).Unix()
+    currentTime = time.Now().AddDate(0, 2, 0)
   default:
-    return time.Now().Unix()
+    currentTime = time.Now()
   }
+
+  return currentTime.Format("2006-01-02")
 }
 
 func GetUUID() string {
