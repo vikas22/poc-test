@@ -46,7 +46,7 @@ func (c *Core) CreatePayment(payment Payment) error {
 }
 
 func (c *Core) Create(cardId string) error {
-  payment := Payment{CardId:cardId, Id: utils.NewID()}
+  payment := Payment{CardId:cardId, PaymentId: utils.NewID()}
   fmt.Println(payment)
   if err := c.repo.Create(&payment); err != nil {
     fmt.Println("Error in creating payments:", err)
