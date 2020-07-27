@@ -1,6 +1,7 @@
 package utils
 
 import (
+  "fmt"
   "github.com/hashicorp/go-uuid"
   "math/rand"
 	"time"
@@ -30,13 +31,16 @@ func NewID() string {
 
 func GetPartitionAt() string {
   currentTime := time.Now()
-  rand.Seed(time.Now().Unix())
-  random := int64(rand.Intn(2))
+  //rand.Seed(time.Now().Unix())
+  random := int64(rand.Intn(100000) % 3)
+  fmt.Println(random)
   switch random {
   case 1:
     currentTime = time.Now().AddDate(0, 1, 0)
+    break;
   case 2:
     currentTime = time.Now().AddDate(0, 2, 0)
+    break;
   default:
     currentTime = time.Now()
   }
