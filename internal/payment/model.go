@@ -1,5 +1,7 @@
 package payment
 
+import "time"
+
 // Authentication - Store all the Authentication data for card
 type Payment struct {
 	Id                    int64 `json:"id"`
@@ -45,7 +47,7 @@ type Payment struct {
 	LateAuthorized        bool
 	ConvertCurrency       bool
 	CreatedAt             int64
-  PartitionAt             string
+  PartitionAt             time.Time
 }
 
 // TableName - Get the authentication table name (impl gorm tabler interface)
