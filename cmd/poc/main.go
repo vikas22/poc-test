@@ -5,6 +5,7 @@ import (
   "db-poc/internal/poc"
   "flag"
   "fmt"
+  "github.com/gin-gonic/gin"
   "github.com/prometheus/client_golang/prometheus/promhttp"
   "net/http"
 )
@@ -27,7 +28,7 @@ func init() {
 }
 
 func main() {
-	bootstrap.Init()
+	//bootstrap.Init()
 	fmt.Println(bootstrap.Db)
 	fmt.Println(bootstrap.Config)
 	fmt.Println("Db Poc")
@@ -42,8 +43,31 @@ func main() {
   switch op {
   case "bootstrap":
     bootstrap.Bootstrap()
+  case "web":
+    cardNumbers := bootstrap.GetCardNumbers()
+    merchantIds := bootstrap.GetMerchantIds()
+
+    startWeb(cardNumbers, merchantIds)
   default:
     poc.RunPoc(records, concurrency)
   }
 
+}
+
+func startWeb(cardNumbers, merchantIds []string) {
+  router := gin.New()
+  rootGroup := router.Group("/")
+  rootGroup.GET("poc", func(context *gin.Context) {
+    //poc.Test2(cardNumbers, merchantIds)
+    context.JSON(http.StatusOK, gin.H{})
+  })
+
+  apiServer := &http.Server{
+    Addr:    "0.0.0.0:1234",
+    Handler: router,
+  }
+
+  if err := apiServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+    fmt.Println(err)
+  }
 }

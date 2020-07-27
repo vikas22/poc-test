@@ -7,8 +7,8 @@ import (
 	"db-poc/pkg/prom_metrics"
 	"db-poc/pkg/utils"
 	"encoding/base64"
-	"fmt"
-	"log"
+  "fmt"
+  "log"
 	"sync"
 	"time"
 )
@@ -36,13 +36,18 @@ func RunPoc(records, concurrency int64) {
 
 func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds, merchantIds []string) {
 	for pId := 1; pId <= int(maxPayment); pId++ {
-    wg.Add(1)
+		wg.Add(1)
 		go test(wg, cardIds, merchantIds)
 	}
 }
 
 func test(wg *sync.WaitGroup, cardIds, merchantIds []string) {
-  defer wg.Done()
+	defer wg.Done()
+	Test2(cardIds, merchantIds)
+}
+
+
+func Test2(cardIds, merchantIds []string) {
 	pCore, _ := paymentPkg.GetCore()
 	cCore, _ := cardsPkg.GetCore()
 	cRepo := cardsPkg.GetRepo()
