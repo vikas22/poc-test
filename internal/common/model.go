@@ -1,10 +1,5 @@
 package common
 
-import (
-	"db-poc/pkg/utils"
-	"github.com/jinzhu/gorm"
-)
-
 var (
 	DEFAULT_LIMIT = 20
 )
@@ -26,13 +21,13 @@ type Model struct {
 	UpdatedAt int64  `json:"updated_at"`
 }
 
-// BeforeCreate - Sets the ID for model
-func (*Model) BeforeCreate(scope *gorm.Scope) (err error) {
-	rzpID := utils.NewID()
-
-	if err == nil {
-		scope.SetColumn("ID", rzpID)
-	}
-
-	return
-}
+//// BeforeCreate - Sets the ID for model
+//func (*Model) BeforeCreate(scope *gorm.Scope) (err error) {
+//	rzpID := utils.NewID()
+//
+//	if err == nil {
+//		scope.SetColumn("ID", rzpID)
+//	}
+//
+//	return
+//}

@@ -3,6 +3,7 @@ package payment
 // Authentication - Store all the Authentication data for card
 type Payment struct {
 	Id                    string `json:"id"`
+  PaymentId            string `json:"payment_id"`
 	MerchantId            string
 	Amount                int64
 	Currency              string
@@ -44,6 +45,7 @@ type Payment struct {
 	LateAuthorized        bool
 	ConvertCurrency       bool
 	CreatedAt             int64
+  PartitionAt             int64
 }
 
 // TableName - Get the authentication table name (impl gorm tabler interface)

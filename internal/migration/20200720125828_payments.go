@@ -10,7 +10,9 @@ func init() {
 }
 
 func Up20200720125828(tx *sql.Tx) error {
-	_, err := tx.Exec(`CREATE TABLE payments (id char(14)  NOT NULL PRIMARY KEY,
+	_, err := tx.Exec(`CREATE TABLE payments (
+    id bigserial not null,
+    payment_id char(14)  NOT NULL,
     merchant_id char(14)  NOT NULL,
     amount int NOT NULL,
     currency char(3)  NOT NULL,
@@ -52,7 +54,7 @@ func Up20200720125828(tx *sql.Tx) error {
     global_token_id varchar(14)  DEFAULT NULL,
     email varchar(255)  DEFAULT NULL,
     contact varchar(20)  DEFAULT NULL,
-    notes text  NOT NULL,
+    notes text  DEFAULT NULL,
     transaction_id char(14)  DEFAULT NULL,
     authorized_at int DEFAULT NULL,
     auto_captured BOOLEAN NOT NULL DEFAULT false,
@@ -95,7 +97,12 @@ func Up20200720125828(tx *sql.Tx) error {
     reference16 varchar(255)  DEFAULT NULL,
     reference17 text  DEFAULT NULL,
     created_at int NOT NULL,
-    updated_at int);`)
+    partition_at int NOT NULL,
+    updated_at int,
+    CONSTRAINT payments_pkey PRIMARY KEY (id, partition_at))
+    PARTITION BY RANGE(partition_at);`)
+
+
 	return err
 }
 

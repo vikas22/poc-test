@@ -12,7 +12,7 @@ func init() {
 func Up20200720133320(tx *sql.Tx) error {
 	_, err := tx.Exec(`CREATE TABLE cards (
   id char(14)  NOT NULL  PRIMARY KEY ,
-  merchant_id char(14)  NOT NULL,
+  merchant_id varchar(14)  NOT NULL,
   name varchar(255)  NOT NULL,
   expiry_month char(2)  NOT NULL,
   expiry_year char(4)  NOT NULL,

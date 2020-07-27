@@ -1,7 +1,8 @@
 package utils
 
 import (
-	"math/rand"
+  "github.com/hashicorp/go-uuid"
+  "math/rand"
 	"time"
 )
 
@@ -27,6 +28,23 @@ func NewID() string {
 	return id
 }
 
+func GetPartitionAt() int64 {
+
+  random := int64(rand.Intn(2))
+  switch random {
+  case 1:
+    return  time.Now().AddDate(0, 1, 0).Unix()
+  case 2:
+    return time.Now().AddDate(0, 2, 0).Unix()
+  default:
+    return time.Now().Unix()
+  }
+}
+
+func GetUUID() string {
+  id,_ := uuid.GenerateUUID()
+  return id
+}
 func RandomInt(ceil int) int {
 	rand.Seed(time.Now().Unix())
 	return rand.Intn(ceil)

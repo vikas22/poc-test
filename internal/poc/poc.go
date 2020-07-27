@@ -78,7 +78,7 @@ func writePaymentsHot(wg *sync.WaitGroup, thread int, maxPayment int64, cardIds,
 
      paymentOp := "payment_write"
      paymentWriteTime := time.Now()
-     payment := paymentPkg.Payment{CardId:cardId, Id: utils.NewID()}
+     payment := paymentPkg.Payment{CardId:cardId, Id: utils.GetUUID(), PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
      err := pCore.CreatePayment(payment)
 
      prom_metrics.DbRequestDuration(paymentOp, true, paymentWriteTime)

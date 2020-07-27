@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gin-gonic/gin v1.6.3
+	github.com/hashicorp/go-uuid v1.0.1
 	github.com/jinzhu/gorm v1.9.15
 	github.com/mitchellh/mapstructure v1.3.2 // indirect
 	github.com/pelletier/go-toml v1.8.0 // indirect

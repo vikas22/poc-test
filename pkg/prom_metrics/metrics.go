@@ -1,9 +1,10 @@
 package prom_metrics
 
 import (
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
-	"time"
+  "fmt"
+  "github.com/prometheus/client_golang/prometheus"
+  "github.com/prometheus/client_golang/prometheus/promauto"
+  "time"
 )
 
 const (
@@ -46,8 +47,9 @@ func DbRequestDuration(operation string, success bool, t0 time.Time) {
 	if success {
 		successStr = "true"
 	}
-	duration := float64(time.Since(t0).Milliseconds())
+	duration := float64(time.Now().Sub(t0).Milliseconds())
 
+	fmt.Println(operation, " = " , duration)
 	dbRequestDurationSummary.WithLabelValues(operation, successStr).Observe(duration)
 	dbRequestDurationHistogram.WithLabelValues(operation, successStr).Observe(duration)
 
