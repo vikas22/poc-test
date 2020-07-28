@@ -1,16 +1,16 @@
 package poc
 
 import (
-	"db-poc/internal/bootstrap"
-	cardsPkg "db-poc/internal/card"
-	paymentPkg "db-poc/internal/payment"
-	"db-poc/pkg/prom_metrics"
-	"db-poc/pkg/utils"
-	"encoding/base64"
+  "db-poc/internal/bootstrap"
+  cardsPkg "db-poc/internal/card"
+  paymentPkg "db-poc/internal/payment"
+  "db-poc/pkg/prom_metrics"
+  "db-poc/pkg/utils"
+  "encoding/base64"
   "fmt"
   "log"
-	"sync"
-	"time"
+  "sync"
+  "time"
 )
 
 const (
@@ -65,7 +65,7 @@ func Test2(cardIds, merchantIds []string) {
 	vaultToken := base64.StdEncoding.EncodeToString([]byte(cardNumber))
 	card := &cardsPkg.Card{}
 	cRepo.FindExistingCard(vaultToken, merchantId, card)
-	fmt.Println("cardID", card.ID)
+
 	if card.ID == "" {
 		go prom_metrics.IncOperation("card_fetch_not_found", true)
 	} else {
@@ -86,7 +86,10 @@ func Test2(cardIds, merchantIds []string) {
 	}
 
 	payment := paymentPkg.Payment{CardId: cardId, PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
-	pCore.CreatePayment(payment)
+	err := pCore.CreatePayment(payment)
+	if (err != nil) {
+	  fmt.Println("Error", fmt.Sprintf("%v", err), payment.PaymentId, payment.PartitionAt)
+  }
   go prom_metrics.IncOperation("payment_create", true)
 
   go prom_metrics.IncOperation("tps", true)
