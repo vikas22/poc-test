@@ -31,7 +31,7 @@ func NewID() string {
 func GetPartitionAt() time.Time {
   currentTime := time.Now()
   //rand.Seed(time.Now().Unix())
-  random := int64(rand.Intn(100000) % 3)
+  random := 5 //int64(rand.Intn(100000) % 3)
   switch random {
   case 1:
     currentTime = time.Now().AddDate(0, 1, 0)
