@@ -48,10 +48,12 @@ func test(wg *sync.WaitGroup, cardIds, merchantIds []string) {
 
 
 func Test2(cardIds, merchantIds []string) {
+  defer prom_metrics.DbRequestDuration("transaction", true, time.Now())
+  now := time.Now()
   var op *string
   s := ""
   op = &s
-  defer prom_metrics.DbRequestDuration("transaction_" + *op, true, time.Now())
+
 	pCore, _ := paymentPkg.GetCore()
 	cCore, _ := cardsPkg.GetCore()
 	cRepo := cardsPkg.GetRepo()
@@ -88,4 +90,5 @@ func Test2(cardIds, merchantIds []string) {
   go prom_metrics.IncOperation("payment_create", true)
 
   go prom_metrics.IncOperation("transaction_"+*op, true)
+  go  prom_metrics.DbRequestDuration("transaction", true, now)
 }
