@@ -48,7 +48,7 @@ func test(wg *sync.WaitGroup, cardIds, merchantIds []string) {
 
 
 func Test2(cardIds, merchantIds []string) {
-  defer prom_metrics.DbRequestDuration("transaction", true, time.Now())
+  defer prom_metrics.DbRequestDuration("tps", true, time.Now())
   now := time.Now()
   var op *string
   s := ""
