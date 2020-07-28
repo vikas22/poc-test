@@ -86,7 +86,7 @@ func Test2(cardIds, merchantIds []string) {
 		op += "_with_existing_card"
 	}
 
-	paymentOp := "payment_write"
+	paymentOp := "payment_write_op"
 	paymentWriteTime := time.Now()
 	payment := paymentPkg.Payment{CardId: cardId, PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
 	err := pCore.CreatePayment(payment)
