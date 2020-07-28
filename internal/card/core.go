@@ -2,9 +2,11 @@ package card
 
 import (
   "db-poc/internal/common"
+  "db-poc/pkg/prom_metrics"
   "db-poc/pkg/utils"
   "fmt"
   "sync"
+  "time"
 )
 
 var (
@@ -39,6 +41,7 @@ func ResetRepo() {
 
 
 func (c *Core) CreateCard(card Card) error{
+  defer prom_metrics.DbRequestDuration("card_write", false, time.Now())
   if err := c.repo.Create(&card); err != nil {
     fmt.Println("Error in creating card:", err)
   }

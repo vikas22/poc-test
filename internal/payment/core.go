@@ -2,9 +2,11 @@ package payment
 
 import (
   "db-poc/internal/common"
+  "db-poc/pkg/prom_metrics"
   "db-poc/pkg/utils"
   "fmt"
   "sync"
+  "time"
 )
 
 var (
@@ -39,6 +41,7 @@ func ResetRepo() {
 
 
 func (c *Core) CreatePayment(payment Payment) error {
+  defer prom_metrics.DbRequestDuration("payment_create", true, time.Now())
   if err := c.repo.Create(&payment); err != nil {
     fmt.Println("Error in creating payments:", err)
   }

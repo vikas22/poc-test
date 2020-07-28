@@ -48,58 +48,39 @@ func test(wg *sync.WaitGroup, cardIds, merchantIds []string) {
 
 
 func Test2(cardIds, merchantIds []string) {
+  defer prom_metrics.DbRequestDuration("transaction", true, time.Now())
 	pCore, _ := paymentPkg.GetCore()
 	cCore, _ := cardsPkg.GetCore()
 	cRepo := cardsPkg.GetRepo()
 	merchantIdSize := len(merchantIds) - 1
 	cardSize := len(cardIds) - 1
-	op := "poc"
 
-	now := time.Now()
 	cardNumber := cardIds[utils.RandomInt(cardSize)]
 	merchantId := merchantIds[utils.RandomInt(merchantIdSize)]
 	vaultToken := base64.StdEncoding.EncodeToString([]byte(cardNumber))
-	cardFetchTime := time.Now()
 	card := &cardsPkg.Card{}
 	cRepo.FindExistingCard(vaultToken, merchantId, card)
 	fmt.Println("cardID", card.ID)
 	if card.ID == "" {
-		prom_metrics.IncOperation(op+"_card_fetch_not_found", true)
-		prom_metrics.DbRequestDuration(op+"_card_fetch_not_found", true, cardFetchTime)
+		go prom_metrics.IncOperation("card_fetch_not_found", true)
 	} else {
-		prom_metrics.IncOperation(op+"_card_fetch_found", true)
-		prom_metrics.DbRequestDuration(op+"_card_fetch_found", true, cardFetchTime)
+    go prom_metrics.IncOperation("card_fetch_found", true)
 	}
 
 	cardId := ""
 
 	if card.ID == "" {
-		cardWriteTime := time.Now()
 		newCard := cardsPkg.Card{VaultToken: vaultToken, MerchantId: merchantId, Id: utils.NewID()}
 		cCore.CreateCard(newCard)
 		cardId = newCard.ID
-		prom_metrics.IncOperation(op+"_card_write", true)
-		prom_metrics.DbRequestDuration(op+"_card_write", false, cardWriteTime)
-		op += "_with_new_card"
+		go prom_metrics.IncOperation("card_write", true)
 	} else {
 		cardId = card.ID
-		op += "_with_existing_card"
 	}
 
-	paymentOp := "payment_write_op"
-	paymentWriteTime := time.Now()
 	payment := paymentPkg.Payment{CardId: cardId, PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
-	err := pCore.CreatePayment(payment)
+	pCore.CreatePayment(payment)
+  go prom_metrics.IncOperation("payment_create", true)
 
-	prom_metrics.IncOperation(paymentOp, true)
-	prom_metrics.DbRequestDuration(paymentOp, true, paymentWriteTime)
-	fmt.Println(op)
-	if err != nil {
-		log.Println(err)
-		prom_metrics.IncOperation(op, false)
-		prom_metrics.DbRequestDuration(op, false, now)
-	} else {
-		prom_metrics.IncOperation(op, true)
-		prom_metrics.DbRequestDuration(op, true, now)
-	}
+  go prom_metrics.IncOperation("transaction", true)
 }

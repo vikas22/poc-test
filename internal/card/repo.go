@@ -3,7 +3,9 @@ package card
 import (
   "db-poc/internal/bootstrap"
   "db-poc/internal/common"
+  "db-poc/pkg/prom_metrics"
   "fmt"
+  "time"
 )
 
 var (
@@ -27,14 +29,18 @@ func GetRepo() *Repo {
 }
 
 func (r *Repo)FindExistingCard(vaultToken, merchantId string, m interface{}) error{
+  now := time.Now()
   q := r.Db.Model(m).Where(map[string]interface{}{
     "merchant_id":  merchantId,
     "vault_token": vaultToken,
   }).First(m)
 
   if q.RecordNotFound() {
+    prom_metrics.DbRequestDuration("card_fetch_not_found", true, now)
     return fmt.Errorf("Record Not Found")
   }
+
+  prom_metrics.DbRequestDuration("card_fetch_found", true, now)
 
   return nil
 }
