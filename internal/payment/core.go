@@ -43,7 +43,7 @@ func ResetRepo() {
 func (c *Core) CreatePayment(payment Payment) error {
   defer prom_metrics.DbRequestDuration("payment_create", true, time.Now())
   if err := c.repo.Create(&payment); err != nil {
-    fmt.Println("Error in creating payments:", err)
+    fmt.Println("Error in creating payments:", err, payment.PaymentId, payment.PartitionAt)
   }
   return nil
 }
