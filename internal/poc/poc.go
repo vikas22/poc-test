@@ -91,5 +91,5 @@ func Test2(cardIds, merchantIds []string) {
 
   go prom_metrics.IncOperation("tps", true)
   go prom_metrics.IncOperation("transaction_"+*op, true)
-  go  prom_metrics.DbRequestDuration("transaction_"+*op, true, now)
+  go prom_metrics.DbRequestDuration("transaction_"+*op, true, now)
 }

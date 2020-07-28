@@ -99,7 +99,7 @@ func Up20200720125828(tx *sql.Tx) error {
     created_at int NOT NULL,
     partition_at DATE NOT NULL,
     updated_at int,
-    CONSTRAINT payments_pkey PRIMARY KEY (id, partition_at))
+    CONSTRAINT payments_pkey PRIMARY KEY (id, payment_id, partition_at))
     PARTITION BY RANGE(partition_at)
     WITH (OIDS=FALSE);`)
 
