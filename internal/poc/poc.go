@@ -112,7 +112,7 @@ func Test2(cardIds, merchantIds []string) {
 	}
 	err := pCore.CreatePayment(payment)
 	if (err != nil) {
-	  fmt.Println("Error", fmt.Sprintf("%v", err), payment.PaymentId, payment.PartitionAt)
+	  fmt.Println("Error", fmt.Sprintf("%v", err), payment.Id, payment.PartitionAt)
   }
   go prom_metrics.IncOperation("payment_create", true)
 
