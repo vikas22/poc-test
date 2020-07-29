@@ -75,7 +75,20 @@ func Test2(cardIds, merchantIds []string) {
 	cardId := ""
 
 	if card.ID == "" {
-		newCard := cardsPkg.Card{VaultToken: vaultToken, MerchantId: merchantId, Id: utils.NewID()}
+		newCard := cardsPkg.Card{
+      Id:                utils.NewID(),
+      MerchantId:        merchantId,
+      Name:              "xyz",
+      ExpiryMonth:       "12",
+      ExpiryYear:        "12",
+      Iin:               "123456",
+      Last4:             "1234",
+      Length:            "16",
+      Vault:             "vault",
+      VaultToken:        vaultToken,
+      GlobalFingerprint: vaultToken,
+      Country:           "IN",
+    }
 		cCore.CreateCard(newCard)
 		cardId = newCard.ID
 		*op += "new_card"
@@ -85,7 +98,18 @@ func Test2(cardIds, merchantIds []string) {
 		cardId = card.ID
 	}
 
-	payment := paymentPkg.Payment{CardId: cardId, PaymentId: utils.NewID(), PartitionAt: utils.GetPartitionAt()}
+	payment := paymentPkg.Payment{
+	  CardId: cardId,
+	  PaymentId: utils.NewID(),
+	  PartitionAt: utils.GetPartitionAt(),
+	  Status:"created",
+	  Method:"card",
+	  Amount:100,
+	  BaseAmount:100,
+	  Currency:"INR",
+	  Email:"test@xyz.com",
+	  Contact:"+9188888888",
+	}
 	err := pCore.CreatePayment(payment)
 	if (err != nil) {
 	  fmt.Println("Error", fmt.Sprintf("%v", err), payment.PaymentId, payment.PartitionAt)

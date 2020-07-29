@@ -11,8 +11,7 @@ func init() {
 
 func Up20200720125828(tx *sql.Tx) error {
 	_, err := tx.Exec(`CREATE TABLE payments (
-    id SERIAL,
-    payment_id char(14)  NOT NULL,
+    id char(14)  NOT NULL,
     merchant_id char(14)  NOT NULL,
     amount int NOT NULL,
     currency char(3)  NOT NULL,
@@ -99,7 +98,7 @@ func Up20200720125828(tx *sql.Tx) error {
     created_at int NOT NULL,
     partition_at DATE NOT NULL,
     updated_at int,
-    CONSTRAINT payments_pkey PRIMARY KEY (id, payment_id, partition_at))
+    CONSTRAINT payments_pkey PRIMARY KEY (payment_id, partition_at))
     PARTITION BY RANGE(partition_at)
     WITH (OIDS=FALSE);`)
 
