@@ -100,7 +100,7 @@ func Test2(cardIds, merchantIds []string) {
 
 	payment := paymentPkg.Payment{
 	  CardId: cardId,
-	  PaymentId: utils.NewID(),
+	  Id: utils.NewID(),
 	  PartitionAt: utils.GetPartitionAt(),
 	  Status:"created",
 	  Method:"card",

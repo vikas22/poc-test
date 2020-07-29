@@ -4,7 +4,7 @@ import "time"
 
 // Authentication - Store all the Authentication data for card
 type Payment struct {
-  PaymentId            string `json:"payment_id"`
+  Id            string
 	MerchantId            string
 	Amount                int64
 	Currency              string
